@@ -1,0 +1,11 @@
+{
+	"title"		:	"VLT_Dr_Kleaner",
+	"type"		:	"npc",
+	"tags"		:	[ "roleplay", "realism" ],
+	"ignore"	:
+	[
+		"*.psd",
+		"*.vcproj",
+		"*.svn*"
+	]
+}
