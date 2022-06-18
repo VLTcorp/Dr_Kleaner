@@ -31,10 +31,15 @@ else
 end
 
 function ENT:Initialize()	
-	self:SetModel( "models/player/kleiner.mdl" )   			
+	self:SetModel( "models/player/kleiner.mdl" )   	
+	--self:SetModel("models/player/phoenix.mdl")	
 	if SERVER then		
-		--self.CouleurDuTruc = Color( math.random(255), math.random(255), math.random(255))
+		
 		self.CouleurDuTruc = Color(0,0,0)
+		if math.random(100)==1 then 
+			self.CouleurDuTruc = Color( math.random(255), math.random(255), math.random(255)) 
+		end	
+
 		self.loco:SetDesiredSpeed(300)
 		self.loco:SetStepHeight( 20 )
 		self.loco:SetJumpHeight(20)
@@ -140,12 +145,21 @@ function ENT:TargetKleaning(ent)
 		else 
 			return false 
 		end		
-	end
-	if ent:IsRagdoll() then return true end		
+	end	
+	if  self:EstUnCorpValide(ent) then return true end		
 	if not self.EstFou then return false end
 	if ent:IsPlayer() and not ent:Alive() then return false end
 	if ent:IsPlayer() then return not GetConVar("ai_ignoreplayers"):GetBool() end
 	return ent:IsNPC() or ent:IsNextBot()  
+end
+
+function ENT:EstUnCorpValide(ent)
+	if not ent:IsRagdoll() then return false end
+	for i = 0 , ent:GetBoneCount() do
+		local nombone = string.lower(ent:GetBoneName(i))
+		if string.find(nombone ,"head") then return true end
+	end
+	return false
 end
 
 function ENT:GetClosestCorpse()
@@ -388,11 +402,11 @@ function ENT:Comportement()
 				
 			--	print(cado:GetAngles())
 				cado:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
-				cado:SetModelScale( 0.5 , 0)
-				cado:SetModel("models/props/rpd/bodybag.mdl")
+				cado:SetModelScale( 0.8 , 0)
+				cado:SetModel("models/props_junk/cardboard_box003b.mdl")
 				cado:SetAngles(Angle(0,math.random(359),0))									
 				
-				cado:SetModelScale( 1 , 0.5)
+				cado:SetModelScale( 1.5 , 0.5)
 				timer.Simple(80, function() 			
 					if IsValid(cado)  then									
 						cado:SetModelScale( 0 ,10)
@@ -411,10 +425,10 @@ function ENT:Comportement()
 				if corpse:IsNPC() or  corpse:IsNextBot() or (corpse:IsPlayer() and corpse:Alive() ) then
 					hook.Run("OnNPCKilled",corpse,self,self)					
 					EmitSound(Sound("ambient/voices/f_scream1.wav"),corpse:GetPos(),corpse:EntIndex(), CHAN_VOICE, 1, 75, 0, 100)
-					cado:SetAngles(corpse:GetAngles()+Angle(90,0,0))
-					cado:SetPos(corpse:GetPos()+Vector(0,0,30))		
-					cado:GetPhysicsObject():SetAngleVelocity(Vector(0,-360,0))	
-					cado:GetPhysicsObject():SetVelocity(Vector(0,0,50))	
+					cado:SetAngles(corpse:GetAngles()+Angle(0,-90,80))
+					cado:SetPos(corpse:GetPos()+Vector(0,0,50))		
+					cado:GetPhysicsObject():SetAngleVelocity(Vector(1000,0,0))	
+					cado:GetPhysicsObject():SetVelocity(Vector(0,50,0))	
 					if 	(corpse:IsPlayer() and corpse:Alive() )  then
 						EmitSound(Sound("ambient/voices/f_scream1.wav"),corpse:GetPos(),corpse:EntIndex(), CHAN_VOICE, 1, 75, 0, 100)
 						corpse:KillSilent() 

@@ -2,7 +2,12 @@ print("vltbase")
 
 
 local clenerostil = CreateConVar("vlt_kl_hostil", "0" ,FCVAR_ARCHIVE)
-
+concommand.Add( "vlt_kl_trigger", function()  
+	for _, kleaner in ipairs( ents.FindByClass( "dr_kleaner" ) ) do
+    kleaner.EstFou = true 
+    print(kleaner)
+	end
+end )
 if SERVER then
 	hook.Add("OnEntityCreated", "relationkleaner" , function (ent)        
     if ent:IsNPC() then
