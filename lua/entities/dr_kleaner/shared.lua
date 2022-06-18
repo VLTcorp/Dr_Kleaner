@@ -332,20 +332,21 @@ function ENT:MoveToPosVlt( pos, options )
     return "ok"
 end
 
+function ENT:DevientHostil()
+	for _, npcc in ipairs( ents.GetAll() ) do
+		if npcc:IsNPC() then
+			--npcc:AddEntityRelationship(self, 2 , 99)				
+			npcc:vlt_SetRelationship(self,D_FR)	
+		end	 
+	end 
+	return 1
+end
+
 function ENT:Comportement()
 --	
 	if (self:Health() < self:GetMaxHealth()) and not self.EstFou then
 		self.EstFou = true 	
-		
-		for _, npcc in ipairs( ents.GetAll() ) do
-			if npcc:IsNPC() then
-				--npcc:AddEntityRelationship(self, 2 , 99)				
-				npcc:vlt_SetRelationship(self,D_FR)	
-			end	 
-		end 
-		
-		
-		
+		self:DevientHostil()		
 	end
 	local corpse = self.KleanerCorpse	
 	if 	self.delayc < CurTime() then
