@@ -5,6 +5,8 @@ ENT.PrintName = "DR kleaner"
 ENT.Category = "DR kleaner"
 ENT.EstUnKleaner = true
 ENT.traquedist = 6000
+--ENT.CustomTaille =1.5
+
 
 local vie = 550
 local viemax = 500
@@ -39,7 +41,7 @@ function ENT:Initialize()
 		if math.random(100)==1 then 
 			self.CouleurDuTruc = Color( math.random(255), math.random(255), math.random(255)) 
 		end	
-
+	--	self:SetModelScale( self:GetModelScale() * self.CustomTaille, 0)
 		self.loco:SetDesiredSpeed(300)
 		self.loco:SetStepHeight( 20 )
 		self.loco:SetJumpHeight(20)
@@ -82,8 +84,11 @@ end
 function ENT:OnKilled(dmginfo)
 	hook.Run("OnNPCKilled",self,dmginfo:GetAttacker(),dmginfo:GetInflictor() )	
 	local corpsess = self:BecomeRagdoll(dmginfo)
-	--print(corpsess)
+	--print(corpsess)	
 	DonneCouleurJoueur(corpsess,self.CouleurDuTruc)	
+--	for i = 0 , corpsess:GetBoneCount() do
+--		corpsess:ManipulateBoneScale( i, Vector(self.CustomTaille,self.CustomTaille,self.CustomTaille)) 
+--	end
 end
 
 function ENT:BodyUpdate()
